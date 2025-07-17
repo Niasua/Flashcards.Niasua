@@ -1,6 +1,6 @@
 ﻿namespace Flashcards.Niasua.Models
 {
-    public class Flashcard
+    internal class Flashcard
     {
         public int FlashcardId { get; set; }
         public int StackId { get; set; }
