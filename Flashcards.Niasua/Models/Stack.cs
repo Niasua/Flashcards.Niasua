@@ -1,8 +1,9 @@
 ﻿namespace Flashcards.Niasua.Models;
 
-internal class Stack
+public class Stack
 {
-    public int StackId { get; set; }
+    public int Id { get; set; }
     public string Name { get; set; }
-    public List<Flashcard> Flashcards { get; set; }
+    public List<Flashcard> Flashcards { get; set; } = new List<Flashcard>();
+    public List<StudySession> StudySessions { get; set; }
 }
