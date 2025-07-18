@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Flashcards.Niasua.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250718002607_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250718183140_AddStudySessions")]
+    partial class AddStudySessions
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
