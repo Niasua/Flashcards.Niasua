@@ -65,4 +65,29 @@ public class FlashcardService
 
         return true;
     }
+
+    public bool UpdateFlashcard(string stackName, int displayId, string newQuestion, string newAnswer)
+    {
+        using var context = new AppDbContext();
+
+        var stack = context.Stacks
+            .Include(s => s.Flashcards.OrderBy(f => f.Id))
+            .FirstOrDefault(s => s.Name == stackName);
+
+        if (stack == null)
+            return false;
+
+        var flashcards = stack.Flashcards.OrderBy(f => f.Id).ToList();
+
+        if (displayId < 1 || displayId > flashcards.Count)
+            return false;
+
+        var flashcardToUpdate = flashcards[displayId - 1];
+        flashcardToUpdate.Question = newQuestion;
+        flashcardToUpdate.Answer = newAnswer;
+
+        context.SaveChanges();
+
+        return true;
+    }
 }
