@@ -1,1 +1,3 @@
-﻿Console.WriteLine("Hello");
+﻿using Flashcards.Niasua.UI;
+
+Menu.Show();
