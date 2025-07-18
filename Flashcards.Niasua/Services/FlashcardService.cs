@@ -7,7 +7,7 @@ namespace Flashcards.Niasua.Services;
 
 public class FlashcardService
 {
-    public bool CreateFlashcard(string stackName, string question, string answer)
+    public static bool CreateFlashcard(string stackName, string question, string answer)
     {
         using var context = new AppDbContext();
 
@@ -22,7 +22,7 @@ public class FlashcardService
         return true;
     }
 
-    public List<FlashcardDTO> GetFlashcardsByStack(string stackName)
+    public static List<FlashcardDTO> GetFlashcardsByStack(string stackName)
     {
         using var context = new AppDbContext();
 
@@ -42,7 +42,7 @@ public class FlashcardService
         }).ToList();
     } 
 
-    public bool DeleteFlashcard(string stackName, int displayId)
+    public static bool DeleteFlashcard(string stackName, int displayId)
     {
         using var context = new AppDbContext();
 
@@ -66,7 +66,7 @@ public class FlashcardService
         return true;
     }
 
-    public bool UpdateFlashcard(string stackName, int displayId, string newQuestion, string newAnswer)
+    public static bool UpdateFlashcard(string stackName, int displayId, string newQuestion, string newAnswer)
     {
         using var context = new AppDbContext();
 

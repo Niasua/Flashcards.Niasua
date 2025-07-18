@@ -6,7 +6,7 @@ namespace Flashcards.Niasua.Services;
 
 public class StudySessionService
 {
-    public bool CreateStudySession(string stackName, int score)
+    public static bool CreateStudySession(string stackName, int score)
     {
         using var context = new AppDbContext();
 
@@ -28,7 +28,7 @@ public class StudySessionService
         return true;
     }
 
-    public List<StudySessionDTO> GetAllSessions()
+    public static List<StudySessionDTO> GetAllSessions()
     {
         using var context = new AppDbContext();
 
