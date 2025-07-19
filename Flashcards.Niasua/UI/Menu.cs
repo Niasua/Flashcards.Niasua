@@ -35,6 +35,15 @@ public static class Menu
 
                     break;
 
+                case "Exit":
+
+                    Console.Clear();
+                    AnsiConsole.MarkupLine("[grey]Goodbye![/]");
+                    Thread.Sleep(1000);
+                    exit = true;
+
+                    break;
+
                 default:
                     break;
             }

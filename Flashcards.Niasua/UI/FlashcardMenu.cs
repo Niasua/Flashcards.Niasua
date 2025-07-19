@@ -8,7 +8,9 @@ public class FlashcardMenu
 {
     public static void Show()
     {
-        while (true)
+        bool exit = false;
+
+        while (!exit)
         {
             Console.Clear();
             var choice = AnsiConsole.Prompt(
@@ -28,6 +30,12 @@ public class FlashcardMenu
                 case "Add":
 
                     AddFlashcard();
+
+                    break;
+
+                case "Back":
+
+                    exit = true;
 
                     break;
 
