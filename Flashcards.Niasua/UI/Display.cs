@@ -1,5 +1,7 @@
 ﻿using Flashcards.Niasua.DTOs;
+using Flashcards.Niasua.Models;
 using Spectre.Console;
+using System.Collections;
 using System.Security.Cryptography.X509Certificates;
 
 namespace Flashcards.Niasua.UI;
@@ -76,6 +78,24 @@ public class Display
                 flashcard.DisplayId.ToString(),
                 flashcard.Question.ToString(),
                 flashcard.Answer.ToString()
+                );
+        }
+
+        AnsiConsole.Write(table);
+    }
+
+    internal static void ShowStacks(List<Models.Stack> stacks)
+    {
+        var table = new Table();
+        table.Border(TableBorder.Rounded);
+        table.AddColumn("[yellow]ID[/]");
+        table.AddColumn("[blue]Name[/]");
+
+        foreach (var stack in stacks)
+        {
+            table.AddRow(
+                stack.Id.ToString(),
+                stack.Name.ToString()
                 );
         }
 

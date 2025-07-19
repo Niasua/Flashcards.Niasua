@@ -33,6 +33,12 @@ public class StackMenu
 
                     break;
 
+                case "View":
+
+                    ViewStacks();
+
+                    break;
+
                 case "Back":
 
                     exit = true;
@@ -44,6 +50,7 @@ public class StackMenu
             }
         }
     }
+
 
     private static void AddStack()
     {
@@ -77,6 +84,21 @@ public class StackMenu
 
             var input = Console.ReadLine();
             if (input?.ToLower() == "zzz") break;
+        }
+    }
+    private static void ViewStacks()
+    {
+        while (true)
+        {
+            Console.Clear();
+            AnsiConsole.MarkupLine("[red]View Stacks:[/]\n");
+
+            var stacks = StackService.GetAllStacks();
+            Display.ShowStacks(stacks);
+
+            AnsiConsole.MarkupLine("\n[grey]Press any key to to return...[/]");
+            Console.ReadKey();
+            break;
         }
     }
 }

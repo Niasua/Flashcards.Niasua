@@ -57,13 +57,9 @@ public class FlashcardMenu
                     exit = true;
 
                     break;
-
-                default:
-                    break;
             }
         }
     }
-
 
     public static void AddFlashcard()
     {
