@@ -46,6 +46,12 @@ public class FlashcardMenu
 
                     break;
 
+                case "Delete":
+
+                    DeleteFlashcard();
+
+                    break;
+
                 case "Back":
 
                     exit = true;
@@ -58,6 +64,72 @@ public class FlashcardMenu
         }
     }
 
+
+    public static void AddFlashcard()
+    {
+        while (true)
+        {
+            Console.Clear();
+            AnsiConsole.MarkupLine("[red]Create Flashcard:[/]\n");
+
+            AnsiConsole.MarkupLine("Type the [green]name[/] of the Flashcard Stack (type 'zzz' to return to the menu):");
+            var stackName = Console.ReadLine();
+            if (stackName?.ToLower() == "zzz") break;
+
+            AnsiConsole.MarkupLine("\nType the [green]question[/] (type 'zzz' to return to the menu):");
+            var question = Console.ReadLine();
+            if (question?.ToLower() == "zzz") break;
+
+            AnsiConsole.MarkupLine("\nType the [green]answer[/] (type 'zzz' to return to the menu):");
+            var answer = Console.ReadLine();
+            if (answer?.ToLower() == "zzz") break;
+
+            var creation = FlashcardService.CreateFlashcard(stackName, question, answer);
+
+            if (creation)
+            {
+                AnsiConsole.MarkupLine("\n[green]Flashcard successfully added![/]:");
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("\n[red]The stack was not found[/]:");
+            }
+
+            AnsiConsole.MarkupLine("\nPress any key to add another flashcard or type [red]'zzz'[/] to return.");
+
+            var input = Console.ReadLine();
+            if (input?.ToLower() == "zzz") break;
+        }
+    }
+    private static void ViewFlashcards()
+    {
+        while (true)
+        {
+            Console.Clear();
+            AnsiConsole.MarkupLine("[red]View Flashcards:[/]\n");
+
+            AnsiConsole.MarkupLine("Type the [green]name[/] of the Flashcard Stack (type 'zzz' to return to the menu):");
+            var stackName = Console.ReadLine();
+            if (stackName?.ToLower() == "zzz") break;
+
+            var flashcards = FlashcardService.GetFlashcardsByStack(stackName);
+
+            if (flashcards == null)
+            {
+                AnsiConsole.MarkupLine("\n[red]The stack was not found[/]:");
+                break;
+            }
+
+            Display.ShowFlashcards(flashcards);
+
+            Console.Clear();
+
+            AnsiConsole.MarkupLine("\nPress any key to view Flashcards again or [red]'zzz'[/] to return.");
+
+            var input = Console.ReadLine();
+            if (input?.ToLower() == "zzz") break;
+        }
+    }
     private static void EditFlashcards()
     {
         while (true)
@@ -120,67 +192,59 @@ public class FlashcardMenu
             if (input?.ToLower() == "zzz") break;
         }
     }
-
-    public static void AddFlashcard()
+    private static void DeleteFlashcard()
     {
         while (true)
         {
             Console.Clear();
-            AnsiConsole.MarkupLine("[red]Create Flashcard:[/]\n");
+            AnsiConsole.MarkupLine("[red]Delete Flashcard:[/]\n");
 
             AnsiConsole.MarkupLine("Type the [green]name[/] of the Flashcard Stack (type 'zzz' to return to the menu):");
             var stackName = Console.ReadLine();
             if (stackName?.ToLower() == "zzz") break;
 
-            AnsiConsole.MarkupLine("\nType the [green]question[/] (type 'zzz' to return to the menu):");
-            var question = Console.ReadLine();
-            if (question?.ToLower() == "zzz") break;
+            List<FlashcardDTO> flashcards = FlashcardService.GetFlashcardsByStack(stackName);
 
-            AnsiConsole.MarkupLine("\nType the [green]answer[/] (type 'zzz' to return to the menu):");
-            var answer = Console.ReadLine();
-            if (answer?.ToLower() == "zzz") break;
-
-            var creation = FlashcardService.CreateFlashcard(stackName, question, answer);
-
-            if (creation)
+            if (flashcards == null || flashcards.Count == 0)
             {
-                AnsiConsole.MarkupLine("\n[green]Flashcard successfully added![/]:");
+                AnsiConsole.MarkupLine("[red]No flashcards found in that stack.[/]");
+                Console.ReadKey();
+                continue;
+            }
+
+            Display.ShowFlaschardsTable(flashcards);
+
+            AnsiConsole.MarkupLine("\nType the ID of the flashcard you want to delete (type 'zzz' to return to the menu):");
+            var flashcardId = Console.ReadLine();
+            if (flashcardId.ToLower() == "zzz") break;
+
+            if (!int.TryParse(flashcardId, out int displayId) || displayId < 1 || displayId > flashcards.Count)
+            {
+                AnsiConsole.MarkupLine("\n[red]Invalid ID. Press any key to try again...[/]:\n");
+                Console.ReadKey();
+                continue;
+            }
+
+            var flashcardToDelete = flashcards[displayId - 1];
+
+            Console.Clear();
+            AnsiConsole.MarkupLine($"[yellow]Deleting flashcard #{displayId}[/]");
+            AnsiConsole.MarkupLine("\nAre you sure you want to delete this Flashcard? (y/n):");
+            var confirm = Console.ReadLine();
+            if (confirm?.ToLower() != "y") continue;
+
+            var delete = FlashcardService.DeleteFlashcard(stackName, displayId);
+
+            if (delete)
+            {
+                AnsiConsole.MarkupLine("\n[green]Flashcard successfully deleted![/]:");
             }
             else
             {
                 AnsiConsole.MarkupLine("\n[red]The stack was not found[/]:");
             }
 
-            AnsiConsole.MarkupLine("\nPress any key to add another flashcard or type [red]'zzz'[/] to return.");
-
-            var input = Console.ReadLine();
-            if (input?.ToLower() == "zzz") break;
-        }
-    }
-    private static void ViewFlashcards()
-    {
-        while (true)
-        {
-            Console.Clear();
-            AnsiConsole.MarkupLine("[red]View Flashcards:[/]\n");
-
-            AnsiConsole.MarkupLine("Type the [green]name[/] of the Flashcard Stack (type 'zzz' to return to the menu):");
-            var stackName = Console.ReadLine();
-            if (stackName?.ToLower() == "zzz") break;
-
-            var flashcards = FlashcardService.GetFlashcardsByStack(stackName);
-
-            if (flashcards == null)
-            {
-                AnsiConsole.MarkupLine("\n[red]The stack was not found[/]:");
-                break;
-            }
-
-            Display.ShowFlashcards(flashcards);
-
-            Console.Clear();
-
-            AnsiConsole.MarkupLine("\nPress any key to view Flashcards again or [red]'zzz'[/] to return.");
+            AnsiConsole.MarkupLine("\nPress any key to delete another flashcard or type [red]'zzz'[/] to return.");
 
             var input = Console.ReadLine();
             if (input?.ToLower() == "zzz") break;
