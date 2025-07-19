@@ -46,18 +46,20 @@ public class StackMenu
 
                     break;
 
+                case "Delete":
+
+                    DeleteStack();
+
+                    break;
+
                 case "Back":
 
                     exit = true;
 
                     break;
-
-                default:
-                    break;
             }
         }
     }
-
 
     private static void AddStack()
     {
@@ -172,6 +174,65 @@ public class StackMenu
             }
 
             AnsiConsole.MarkupLine("\nPress any key to update another stack or type [red]'zzz'[/] to return.");
+
+            var input = Console.ReadLine();
+            if (input?.ToLower() == "zzz") break;
+        }
+    }
+    private static void DeleteStack()
+    {
+        while (true)
+        {
+            Console.Clear();
+            AnsiConsole.MarkupLine("[red]Delete Stack:[/]\n");
+
+            var stacks = StackService.GetAllStacks();
+
+            if (stacks == null || stacks.Count == 0)
+            {
+                AnsiConsole.MarkupLine("[red]No stacks found.[/]");
+                Console.ReadKey();
+                continue;
+            }
+
+            Display.ShowStacks(stacks);
+
+            AnsiConsole.MarkupLine("\nType the ID of the Stack you want to delete (type 'zzz' to return to the menu):");
+            var stackId = Console.ReadLine();
+            if (stackId?.ToLower() == "zzz") break;
+
+            if (!int.TryParse(stackId, out int displayId) || displayId < 1 || displayId > stacks.Count)
+            {
+                AnsiConsole.MarkupLine("\n[red]Invalid ID. Press any key to try again...[/]:\n");
+                Console.ReadKey();
+                continue;
+            }
+
+            var stackToDelete = stacks[displayId - 1];
+
+            Console.Clear();
+            AnsiConsole.MarkupLine($"[yellow]Deleting Stack {stackToDelete.Name}[/]");
+            AnsiConsole.MarkupLine("\nAre you sure you want to delete this Stack? (y/n):");
+            var confirm = Console.ReadLine();
+            if (confirm?.ToLower() != "y")
+            {
+                AnsiConsole.MarkupLine("\n[grey]Deletion cancelled. Press any key to continue...[/]");
+                Console.ReadKey();
+                continue;
+            }
+
+            var delete = StackService.DeleteStack(displayId);
+
+            if (delete)
+            {
+                AnsiConsole.MarkupLine("\n[green]Stack successfully deleted![/]:");
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("\n[red]The stack was not found[/]:");
+            }
+
+            AnsiConsole.MarkupLine("\nPress any key to delete another Stack or type [red]'zzz'[/] to return.");
 
             var input = Console.ReadLine();
             if (input?.ToLower() == "zzz") break;
