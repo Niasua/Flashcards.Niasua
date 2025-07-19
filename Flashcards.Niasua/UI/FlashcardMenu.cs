@@ -86,7 +86,7 @@ public class FlashcardMenu
 
             if (!int.TryParse(flashcardId, out int displayId) || displayId < 1 || displayId > flashcards.Count)
             {
-                AnsiConsole.MarkupLine("\n[red]Invalid ID. Press any key to try again.[/]:\n");
+                AnsiConsole.MarkupLine("\n[red]Invalid ID. Press any key to try again...[/]:\n");
                 Console.ReadKey();
                 continue;
             }
