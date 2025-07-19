@@ -1,4 +1,5 @@
-﻿using Flashcards.Niasua.Services;
+﻿using Flashcards.Niasua.DTOs;
+using Flashcards.Niasua.Services;
 using Spectre.Console;
 using System.Data;
 
@@ -39,6 +40,12 @@ public class FlashcardMenu
 
                     break;
 
+                case "Edit":
+
+                    EditFlashcards();
+
+                    break;
+
                 case "Back":
 
                     exit = true;
@@ -51,6 +58,68 @@ public class FlashcardMenu
         }
     }
 
+    private static void EditFlashcards()
+    {
+        while (true)
+        {
+            Console.Clear();
+            AnsiConsole.MarkupLine("[red]Edit Flashcards:[/]\n");
+
+            AnsiConsole.MarkupLine("Type the [green]name[/] of the Flashcard Stack (type 'zzz' to return to the menu):");
+            var stackName = Console.ReadLine();
+            if (stackName?.ToLower() == "zzz") break;
+
+            List<FlashcardDTO> flashcards = FlashcardService.GetFlashcardsByStack(stackName);
+
+            if (flashcards == null || flashcards.Count == 0)
+            {
+                AnsiConsole.MarkupLine("[red]No flashcards found in that stack.[/]");
+                Console.ReadKey();
+                continue;
+            }
+
+            Display.ShowFlaschardsTable(flashcards);
+
+            AnsiConsole.MarkupLine("\nType the ID of the flashcard you want to update (type 'zzz' to return to the menu):");
+            var flashcardId = Console.ReadLine();
+            if (flashcardId.ToLower() == "zzz") break;
+
+            if (!int.TryParse(flashcardId, out int displayId) || displayId < 1 || displayId > flashcards.Count)
+            {
+                AnsiConsole.MarkupLine("\n[red]Invalid ID. Press any key to try again.[/]:\n");
+                Console.ReadKey();
+                continue;
+            }
+
+            var flashcardToUpdate = flashcards[displayId - 1];
+
+            Console.Clear();
+            AnsiConsole.MarkupLine($"[yellow]Editing flashcard #{displayId}[/]");
+            AnsiConsole.MarkupLine("\nType the new [green]question[/] (type 'zzz' to return to the menu):");
+            var question = Console.ReadLine();
+            if (question?.ToLower() == "zzz") break;
+
+            AnsiConsole.MarkupLine("\nType the new [green]answer[/] (type 'zzz' to return to the menu):");
+            var answer = Console.ReadLine();
+            if (answer?.ToLower() == "zzz") break;
+
+            var update = FlashcardService.UpdateFlashcard(stackName, displayId, question, answer);
+
+            if (update)
+            {
+                AnsiConsole.MarkupLine("\n[green]Flashcard successfully updated![/]:");
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("\n[red]The stack was not found[/]:");
+            }
+
+            AnsiConsole.MarkupLine("\nPress any key to update another flashcard or type [red]'zzz'[/] to return.");
+
+            var input = Console.ReadLine();
+            if (input?.ToLower() == "zzz") break;
+        }
+    }
 
     public static void AddFlashcard()
     {

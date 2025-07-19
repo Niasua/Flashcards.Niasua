@@ -61,4 +61,24 @@ public class Display
             }
         }
     }
+
+    internal static void ShowFlaschardsTable(List<FlashcardDTO> flashcards)
+    {
+        var table = new Table();
+        table.Border(TableBorder.Rounded);
+        table.AddColumn("[yellow]ID[/]");
+        table.AddColumn("[blue]Question[/]");
+        table.AddColumn("[green]Answer[/]");
+
+        foreach (var flashcard in flashcards)
+        { 
+            table.AddRow(
+                flashcard.DisplayId.ToString(),
+                flashcard.Question.ToString(),
+                flashcard.Answer.ToString()
+                );
+        }
+
+        AnsiConsole.Write(table);
+    }
 }
