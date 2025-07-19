@@ -35,6 +35,12 @@ public static class Menu
 
                     break;
 
+                case "Stacks":
+
+                    StackMenu.Show();
+
+                    break;
+
                 case "Exit":
 
                     Console.Clear();
