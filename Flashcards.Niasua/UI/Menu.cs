@@ -41,6 +41,12 @@ public static class Menu
 
                     break;
 
+                case "Study Sessions":
+
+                    StudySessionMenu.Show();
+
+                    break;
+
                 case "Exit":
 
                     Console.Clear();
@@ -49,11 +55,7 @@ public static class Menu
                     exit = true;
 
                     break;
-
-                default:
-                    break;
             }
-
         }
     }
 }
