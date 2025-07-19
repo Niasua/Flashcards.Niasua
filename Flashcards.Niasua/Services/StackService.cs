@@ -28,7 +28,7 @@ public class StackService
         using var context = new AppDbContext();
 
         return context.Stacks
-            .OrderByDescending(s => s.Id)
+            .OrderBy(s => s.Id)
             .Include(s => s.Flashcards)
             .Include(s => s.StudySessions)
             .ToList();

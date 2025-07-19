@@ -1,4 +1,5 @@
-﻿using Flashcards.Niasua.Services;
+﻿using Flashcards.Niasua.DTOs;
+using Flashcards.Niasua.Services;
 using Spectre.Console;
 using System.Data;
 
@@ -36,6 +37,12 @@ public class StackMenu
                 case "View":
 
                     ViewStacks();
+
+                    break;
+
+                case "Edit":
+
+                    EditStack();
 
                     break;
 
@@ -94,11 +101,80 @@ public class StackMenu
             AnsiConsole.MarkupLine("[red]View Stacks:[/]\n");
 
             var stacks = StackService.GetAllStacks();
+
+            if (stacks == null || stacks.Count == 0)
+            {
+                AnsiConsole.MarkupLine("[red]No stacks found.[/]");
+                Console.ReadKey();
+                continue;
+            }
+
             Display.ShowStacks(stacks);
 
             AnsiConsole.MarkupLine("\n[grey]Press any key to to return...[/]");
             Console.ReadKey();
             break;
+        }
+    }
+    private static void EditStack()
+    {
+        while (true)
+        {
+            Console.Clear();
+            AnsiConsole.MarkupLine("[red]Edit Stack:[/]\n");
+
+            var stacks = StackService.GetAllStacks();
+
+            if (stacks == null || stacks.Count == 0)
+            {
+                AnsiConsole.MarkupLine("[red]No stacks found.[/]");
+                Console.ReadKey();
+                continue;
+            }
+
+            Display.ShowStacks(stacks);
+
+            AnsiConsole.MarkupLine("\nType the ID of the Stack you want to update (type 'zzz' to return to the menu):");
+            var stackId = Console.ReadLine();
+            if (stackId.ToLower() == "zzz") break;
+
+            if (!int.TryParse(stackId, out int displayId) || displayId < 1 || displayId > stacks.Count)
+            {
+                AnsiConsole.MarkupLine("\n[red]Invalid ID. Press any key to try again...[/]:\n");
+                Console.ReadKey();
+                continue;
+            }
+
+            var stackToUpdate = stacks[displayId - 1];
+
+            Console.Clear();
+            AnsiConsole.MarkupLine($"[yellow]Editing Stack [green]{stackToUpdate.Name}[/][/]");
+            AnsiConsole.MarkupLine("\nType the new [green]name[/] of the stack (type 'zzz' to return to the menu):");
+            var newName = Console.ReadLine();
+            if (newName?.ToLower() == "zzz") break;
+
+            if (string.IsNullOrWhiteSpace(newName))
+            {
+                AnsiConsole.MarkupLine("\n[red]Stack name cannot be empty.[/]");
+                Console.ReadKey();
+                continue;
+            }
+
+            var update = StackService.UpdateStack(displayId, newName);
+
+            if (update)
+            {
+                AnsiConsole.MarkupLine("\n[green]Stack successfully updated![/]:");
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("\n[red]The stack was not found[/]:");
+            }
+
+            AnsiConsole.MarkupLine("\nPress any key to update another stack or type [red]'zzz'[/] to return.");
+
+            var input = Console.ReadLine();
+            if (input?.ToLower() == "zzz") break;
         }
     }
 }
