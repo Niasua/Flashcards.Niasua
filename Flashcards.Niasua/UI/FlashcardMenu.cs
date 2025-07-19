@@ -212,7 +212,7 @@ public class FlashcardMenu
 
             AnsiConsole.MarkupLine("\nType the ID of the flashcard you want to delete (type 'zzz' to return to the menu):");
             var flashcardId = Console.ReadLine();
-            if (flashcardId.ToLower() == "zzz") break;
+            if (flashcardId?.ToLower() == "zzz") break;
 
             if (!int.TryParse(flashcardId, out int displayId) || displayId < 1 || displayId > flashcards.Count)
             {
