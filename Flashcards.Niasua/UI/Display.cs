@@ -134,4 +134,24 @@ public class Display
 
         AnsiConsole.Write(table);
     }
+
+    internal static void ShowStudySessions(List<StudySessionDTO> sessions)
+    {
+        var table = new Table();
+        table.Border(TableBorder.Rounded);
+        table.AddColumn("[yellow]Stack Name[/]");
+        table.AddColumn("[blue]Date[/]");
+        table.AddColumn("[green]Score[/]");
+
+        foreach (var session in sessions)
+        {
+            table.AddRow(
+                session.StackName.ToString(),
+                session.Date.ToString("dd-MM-yyyy HH:mm"),
+                session.Score.ToString()
+                );
+        }
+
+        AnsiConsole.Write(table);
+    }
 }

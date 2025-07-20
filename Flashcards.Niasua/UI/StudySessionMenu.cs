@@ -4,7 +4,7 @@ using Spectre.Console;
 
 namespace Flashcards.Niasua.UI;
 
-public class StudySessionMenu
+public static class StudySessionMenu
 {
     public static void Show()
     {
@@ -94,6 +94,34 @@ public class StudySessionMenu
 
     private static void ViewHistory()
     {
-        throw new NotImplementedException();
+        while (true)
+        {
+            Console.Clear();
+            AnsiConsole.MarkupLine("[red]View Study Session History:[/]\n");
+
+            var sessions = StudySessionService.GetAllSessions();
+
+            AnsiConsole.MarkupLine("[grey]Type a Stack Name to filter, or press Enter to see all:[/]");
+            var input = Console.ReadLine()?.Trim();
+
+            if (!string.IsNullOrWhiteSpace(input))
+            {
+                sessions = sessions
+                    .Where(s => s.StackName.Equals(input, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+            }
+
+            if (sessions == null)
+            {
+                AnsiConsole.MarkupLine("\n[red]No sessions found.[/]:");
+                break;
+            }
+
+            Display.ShowStudySessions(sessions);
+
+            AnsiConsole.MarkupLine("\n[grey]Press any key to return...[/]");
+            Console.ReadKey();
+            break;
+        }
     }
 }
