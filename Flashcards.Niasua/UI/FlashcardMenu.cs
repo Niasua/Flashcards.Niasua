@@ -99,6 +99,8 @@ public class FlashcardMenu
     }
     private static void ViewFlashcards()
     {
+        var isStudying = false;
+
         while (true)
         {
             Console.Clear();
@@ -116,7 +118,7 @@ public class FlashcardMenu
                 break;
             }
 
-            Display.ShowFlashcards(flashcards);
+            Display.ShowFlashcards(flashcards, isStudying);
 
             Console.Clear();
 

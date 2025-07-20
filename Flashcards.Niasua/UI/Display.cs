@@ -8,27 +8,40 @@ namespace Flashcards.Niasua.UI;
 
 public class Display
 {
-    internal static void ShowFlashcards(List<FlashcardDTO> flashcards)
+    internal static int? ShowFlashcards(List<FlashcardDTO> flashcards, bool isStudying)
     {
         Console.Clear();
         if (flashcards == null || flashcards.Count == 0)
         {
             AnsiConsole.MarkupLine("[red]No flashcards found in this stack.[/]");
             Console.ReadKey();
-            return;
+            return null;
         }
 
         int index = 0;
         bool showingQuestion = true;
+
+        int score = 0;
+
+        void NextCard()
+        {
+            index++;
+            if (index >= flashcards.Count)
+                index = 0;
+            showingQuestion = true;
+        }
 
         while (true)
         {
             Console.Clear();
             var card = flashcards[index];
 
+            AnsiConsole.MarkupLine($"[yellow]Flashcard {index + 1}/{flashcards.Count}[/]");
+            if (isStudying)
+                AnsiConsole.MarkupLine($"[bold yellow]Progress: {score}/{flashcards.Count}[/]");
+
             if (showingQuestion)
             {
-                AnsiConsole.MarkupLine($"[yellow]Flashcard {index + 1}/{flashcards.Count}[/]");
                 AnsiConsole.MarkupLine("[bold]Question[/]");
                 AnsiConsole.MarkupLine($"{card.Question}");
                 AnsiConsole.MarkupLine("\nPress [green]Enter[/] to reveal answer, [red]'n'[/] next card, [red]'q'[/] quit.");
@@ -38,7 +51,10 @@ public class Display
                 AnsiConsole.MarkupLine($"[yellow]Flashcard {index + 1}/{flashcards.Count}[/]");
                 AnsiConsole.MarkupLine("[bold]Answer:[/]");
                 AnsiConsole.MarkupLine($"{card.Answer}");
-                AnsiConsole.MarkupLine("\nPress [green]Enter[/] to show question again, [red]'n'[/] next card, [red]'q'[/] quit.");
+                if (isStudying)
+                    AnsiConsole.MarkupLine("\nPress [green]Enter[/] to show question again, [green]H[/] for Hit, [red]M[/] for Miss, [yellow]'n'[/] next card, [red]'q'[/] quit.");
+                else
+                    AnsiConsole.MarkupLine("\nPress [green]Enter[/] to show question again, [red]'n'[/] next card, [red]'q'[/] quit.");
             }
 
             var key = Console.ReadKey(true);
@@ -48,20 +64,37 @@ public class Display
 
             if(key.Key == ConsoleKey.N)
             {
-                index++;
-                if (index >= flashcards.Count)
-                {
-                    index = 0; // vuelve a la primera flashcard
-                    showingQuestion = true;
-                    continue;
-                }
-                showingQuestion = true;
+                NextCard();
             }
             else if (key.Key == ConsoleKey.Enter)
             {
                 showingQuestion = !showingQuestion;
             }
+            else if (isStudying && key.Key == ConsoleKey.H)
+            {
+                score++;
+                index++;
+                AnsiConsole.MarkupLine("[green]Hit![/]");
+                Thread.Sleep(500);
+                NextCard();
+            }
+            else if (isStudying && key.Key == ConsoleKey.M)
+            {
+                score--;
+                index++;
+                AnsiConsole.MarkupLine("[red]Miss![/]");
+                Thread.Sleep(500);
+                NextCard();
+            }
         }
+
+        if (isStudying)
+        {
+            AnsiConsole.MarkupLine($"\n[green]Study Session Complete![/]");
+            AnsiConsole.MarkupLine($"Final Score: [bold]{score}[/]");
+        }
+
+        return score;
     }
 
     internal static void ShowFlaschardsTable(List<FlashcardDTO> flashcards)
